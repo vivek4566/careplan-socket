@@ -1,0 +1,512 @@
+openapi: '3.0.2'
+info:
+  title: careplan service
+  version: '1.0'
+servers:
+  - url: http://localhost:8000
+
+paths:
+  /Plans/getAll:
+    get:
+      tags:
+        - Plans
+      parameters:
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/directionParam"
+        - $ref: "#/components/parameters/sortByFieldParam"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlansPagedResultDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+  /Plans/get:
+    get:
+      tags:
+        - Plans
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlansDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"
+  /Plans/create:
+    post:
+      tags:
+        - Plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlansDto"
+      responses:
+        "201":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlansDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"
+  /Plans/update:
+    put:
+      tags:
+        - Plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlansDto"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlansDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"
+  /Plans/delete:
+    get:
+      tags:
+        - Plans
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"
+  /goals/getAll:
+    get:
+      tags:
+        - goals
+      parameters:
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/directionParam"
+        - $ref: "#/components/parameters/sortByFieldParam"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GoalsPagedResultDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+  /goals/get:
+    get:
+      tags:
+        - goals
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/goalsDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"
+  /goals/create:
+    post:
+      tags:
+        - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/goalsDto"
+      responses:
+        "201":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/goalsDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"          
+  /goals/update:
+    put:
+      tags:
+        - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/goalsDto"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/goalsDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"
+  /goals/delete:
+    get:
+      tags:
+        - goals
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"
+  /tasks/getAll:
+    get:
+      tags:
+        - tasks
+      parameters:
+        - $ref: "#/components/parameters/limitParam"
+        - $ref: "#/components/parameters/directionParam"
+        - $ref: "#/components/parameters/sortByFieldParam"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TasksPagedResultDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+  /tasks/get:
+    get:
+      tags:
+        - tasks
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/tasksDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"
+  /tasks/create:
+    post:
+      tags:
+        - tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/tasksDto"
+      responses:
+        "201":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/tasksDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"          
+  /tasks/update:
+    put:
+      tags:
+        - tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/tasksDto"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/tasksDto"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"
+  /tasks/delete:
+    get:
+      tags:
+        - tasks
+      parameters:
+        - $ref: "#/components/parameters/idParam"
+      responses:
+        "200":
+          $ref: "#/components/responses/Success"
+        "401":
+          $ref: "#/components/responses/UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/ResourceNotFoundError"
+        "422":
+          $ref: "#/components/responses/UnAcceptableInputs"
+  
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    idParam:
+      name: Id
+      in: query
+      required: true
+      schema:
+        type: string
+    limitParam:
+      name: Limit
+      in: query
+      schema:
+        type: integer
+        nullable: true
+    directionParam:
+      name: Direction
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: asc
+    sortByFieldParam:
+      name: SortByField
+      in: query
+      schema:
+        type: string
+        nullable: true
+  responses:
+    Success:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MessageDto"
+    ResourceNotFoundError:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MessageDto"
+    UnauthorizedError:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MessageDto"
+    UnAcceptableInputs:
+      description: Invalid Inputs
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MessageDto"
+  schemas:
+    MessageDto:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    TasksPagedResultDto:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/tasksDto"
+    PlansPagedResultDto:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/PlansDto"
+    GoalsPagedResultDto:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/goalsDto"
+    PlansDto:
+      type: object
+      properties:
+        careplanNumber:
+          type: number
+        createdAt:
+          format: Timestamp
+          type: string
+        dueDate:
+          format: Timestamp
+          type: string
+        isExist:
+          type: boolean
+        patientId:
+          type: string
+        planName:
+          type: string
+        planId:
+          type: string
+        priority:
+          type: string
+        startDate:
+          format: Timestamp
+          type: string
+        status:
+          type: string
+        taskCreator:
+          type: string
+        # required:
+        #   - careplanNumber
+        #   - createdAt
+        #   - dueDate
+        #   - isExist
+        #   - patientId
+        #   - planName
+        #   - priority
+        #   - startDate
+        #   - status
+        #   - taskCreator
+
+    goalsDto: 
+      type: object
+      properties:
+            createdAt:
+              format: Timestamp
+              type: string
+            goalId:
+              type: string
+            goalName:
+              type: string
+            goalPriority:
+              type: string
+            goalStartDate:
+              format: Timestamp
+              type: string
+            goalTargetDate:
+              format: Timestamp
+              type: string
+            isExist:
+              type: boolean
+            patientId:
+              type: string
+            planId:
+              type: string
+            # required:
+            #   - createdAt 
+            #   - goalId
+            #   - goalName
+            #   - goalPriority
+            #   - goalStartDate
+            #   - goalTargetDate
+            #   - isExist
+            #   - patientId
+            #   - planId
+    tasksDto: 
+      type: object
+      properties:
+            assigneeTask:
+              type: string
+            createdAt:
+              format: Timestamp
+              type: string
+            descriptionTask:
+              type: string
+            goalId:
+              type: string
+            isExist:
+              type: boolean
+            planId:
+              type: string
+            priorityTask:
+              type: string
+            statusTask:
+              type: string
+            subjectTask:
+              type: string
+            targetDateTask:
+              format: Timestamp
+              type: string 
+            taskid:
+              type: string
+            typeTask:
+              type: string
+            valueTask:
+              type: string
+            # required:
+            #   - assigneeTask
+            #   - createdAt
+            #   - descriptionTask
+            #   - goalId
+            #   - isExist
+            #   - planId
+            #   - priorityTask
+            #   - statusTask
+            #   - subjectTask
+            #   - targetDateTask
+            #   - taskid
+            #   - typeTask
+            #   - valueTask

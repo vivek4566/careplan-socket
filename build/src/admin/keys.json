@@ -1,0 +1,12 @@
+{
+    "type": "service_account",
+    "project_id": "careplan630",
+    "private_key_id": "4ab492e2dc449d044dd170b121923cc337dca213",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDaJfIlSmcwZK0j\nYahMHA+jzDSz+an+lZxPb38g+QHHL3rrfCNPIXKpjW0VkA1WsYoab7u+4H1Zvkxw\nLRRdZ9Io5FaAh8/i1FQX83g95LPl/hKGBbGKaZLCC6JJMzbsYI6g4K5ly16Y17ae\naV/3UB6pvbB+a9E2+bhPgRGaCSbbY1YmX4fbcBl542ABSkeC8WnYKFjNxp92bzzv\ns+0By8n2XNru9/QQtjVJlYWbFwFHkvyTE8HzuIh8bB+yu6qJWcqrsQP5OE1FfvuH\nx6mf50kA6dbmwN4S4BFUR7I7W9PqrUHA4Cg4DahVbUxIaE4nCaBIpcGXE0ns9V08\n18yAQcAJAgMBAAECggEAKC9SRlVI4ezByiE8t9x5cxJ0aOzmSDv2IdnnoMLN9YvF\nCGkDNhnyvdIMFKtHEb+9sXYArz46SRRZj1Z2iGhOGfNKDf42qNG1Nf5HGZuuGgFu\nFxsoY9djzfQHrpVNGkkFLRSGe8D1SZF/FfpST8QGCf2j6/3fedGRhq+/dtEVw9bW\n/YyvdutP4G6gOLFXyZ2D10kgE/9TQbg8B0DswXtLNnXmG2lK9D4hfikzK7cRjFfe\no7pROcj5Jmyduq457tP0rkK/+j9ajUgMMKZlIux91A3Zd46U4bYsRxXtIyMl6Hgp\n3AEGyoPvwY947z9/rBp4AtdYYZhOPfZyG4XyyhgmQwKBgQD5+KopoV3mxoAU8sZU\nY/atpRTcSrtcyceLYwPOebfdywacMfVoFkXIoimR1aaioWA+HKUyJQGUwHK4yMp2\nlfeOMyMEANKI7vWiDWZQljXvxpeke6jpGo/LgrhZNsaL5BU1EMzbpgTlcDQGf7a5\n9g/ZV/bdXEG0uY75TA+s6bWVOwKBgQDfaM2+QKDUJDiE3bBlcHGHGGPbZxOL2knz\nXDa9inZdF5/QrTmLnfYeS2XGREMk3eqq9l0nO1WMG0aC85H/7C0jXrT9wSE0QZ2P\nBxM4wbrq19Rlg6im6v7bA1W6ecn2+heJ+aum/8xXhdkxHWODeAVSKA2UJkcICC4D\ny/fhqv2biwKBgDbdDPv2HtX320S9xCnhhtK12M5A2L6Uyucc5Ej9Dg3v8ZN2o5Yk\nzUwry1PmwJwRLz5yqw9GcAJl+sfzyfwdDih3sMfAJnVHfUIEDuDBFzV5MO849Om0\nmrrgBfYOv6UUelMbTNsopQp2hfSnM0O9bd0WIWiURxeTYn3047vfz6rhAoGBAMZw\nbO+ksDY+xgUedORlcDGzNF9Zuz7p8e275tOM/X3K0iWk+AxPjqFyD0CAubMxepPI\nqQ2D4oTEZWlDuFc+DQnxwYnz1e54qd61RhmP2ttmQj65J0C8UwtuduNf8kjx856W\nqiV36KWFOlop5I6OOQu0j/sb1NQJj/XHYrKMEx/pAoGAeTsUHJoPfQ8454wcVB4b\nLnM0s+hl2h/B3Z8bX4uu0ScwhjKbAlcDTjuvhhb98aDXWJ6wHk+9fJuosc66mU1b\nzJsitFbH5rtCWFchyZqYd5ZFh6m59kVkyzYZI84hh+ZowMZeqgY62uqUJWtAvcgw\nmcp+X8KyPuUb0H8aAxC5gmU=\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-a86rr@careplan630.iam.gserviceaccount.com",
+    "client_id": "109212304686610331950",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-a86rr%40careplan630.iam.gserviceaccount.com"
+}
