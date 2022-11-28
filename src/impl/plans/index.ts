@@ -8,5 +8,6 @@ export const planServiceImpl: t.PlansApi = {
 	getPlansDelete: service.delete,
 	getPlansGet: service.get,
 	getPlansGetAll: service.getAll,
-	putPlansUpdate: service.update,
+	putPlansUpdate:service.update
+	
 };

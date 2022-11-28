@@ -7,7 +7,7 @@ export class TaskService {
 	private readonly collectionName: string;
 
 	constructor() {
-		this.collectionName = "NEW-careplans";
+		this.collectionName = "PATIENTS";
 		this.getAll = this.getAll.bind(this);
 		this.get = this.get.bind(this);
 		this.create = this.create.bind(this);
@@ -19,12 +19,13 @@ export class TaskService {
 	 ! Todo: Implement pagination for this service
 	*/
 	async getAll(
+		patientId: string,
 		limit: number | null | undefined,
 		direction: Api.DirectionParamEnum | undefined,
 		sortByField: string | null | undefined
 	): Promise<t.GetTasksGetAllResponse> {
 		try {
-			const TasksQuerySnap = await db.collection(`${this.collectionName}`).get();
+			const TasksQuerySnap = await db.collectionGroup(`TASKS`).where("patientId","==",patientId).get();
 			const Tasks: Api.TasksDto[] = TasksQuerySnap.docs
 				.map((doc: { data: () => any; }) => doc.data())
 				.map((json: any) => v.modelApiTasksDtoFromJson("Tasks", json));
@@ -37,32 +38,40 @@ export class TaskService {
 			};
 		} catch (error) {
 			console.error(error);
-			throw error;
+			//throw error;
+			return {
+				status: 404,
+				body: {message:`something went wrong`}
+			}
 		}
 	}
 
-	async get(taskid: string): Promise<t.GetTasksGetResponse> {
+	async get(id: string): Promise<t.GetTasksGetResponse> {
 		try {
-			const TasksDocSnap = await db.doc(`${this.collectionName}/${taskid}`).get();
-			if (!TasksDocSnap.exists) {
-				throw new Error("no-Tasks-found");
+			const tasksDocSnap =   (await db.collectionGroup(`TASKS`).where("taskId","==",id).get()).docs[0];
+			if (!tasksDocSnap.exists) {
+				throw new Error("no-tasks-found");
 			}
-			const Tasks = v.modelApiGoalsDtoFromJson("Tasks", TasksDocSnap.data());
+			const tasks = v.modelApiTasksDtoFromJson("tasks", tasksDocSnap.data());
 			return {
 				status: 200,
-				body: Tasks,
+				body: tasks,
 			};
 		} catch (error: any) {
 			console.error(error);
-			if (error.toString().match("no-Tasks-found")) {
+			if (error.toString().match("no-task-found")) {
 				return {
 					status: 404,
 					body: {
-						message: "No Tasks found with given id",
+						message: "No task found with given id",
 					},
 				};
 			}
-			throw error;
+			// throw error;
+			return {
+				status: 404,
+				body: {message:`something went wrong`}
+			}
 		}
 	}
 	async create(request: Api.TasksDto | undefined): Promise<t.PostTasksCreateResponse> {
@@ -71,28 +80,33 @@ export class TaskService {
 				throw new Error("invalid-inputs");
 			}
 
-			if (!request.taskid) {
+			if (!request.patientId) {
 				throw new Error("no-uId-found");
 			}
+			
 
-			const goalsRef = db.collection(`${this.collectionName}`).doc(request.taskid);
+			const tasksRef = db.collection(`${this.collectionName}/${request.patientId}/CAREPLAN/${request.taskid}/TASKS`).doc();
+			request.taskid = tasksRef.id
+			const tasksRequest = v.modelApiTasksDtoFromJson("tasks", request);
 			try {
-				await this._checkUserExists(request.taskid);
+				const patient = await this._checkUserExists(request.patientId);
+				// console.log("pppp",patient)
+				await tasksRef.set({
+					...tasksRequest,
+					isExist: true,
+					createdAt: new Date().toISOString(),
+				});
+				return {
+					status: 201,
+					body: request,
+				};
 			} catch (error: any) {
-				if (error.toString().match("no-tasks-found")) {
-					await goalsRef.set({
-						...request,
-						isExist: true,
-						id: goalsRef.id,
-						createdAt: new Date().toISOString(),
-					});
-					return {
-						status: 201,
-						body: request,
-					};
+				if (error.toString().match("no-patient-found")) {
+					throw new Error("no-patient-found");
 				}
+				throw error;
+
 			}
-			throw new Error("tasks-already-exists");
 		} catch (error: any) {
 			console.error(error);
 			if (error.toString().match("invalid-inputs")) {
@@ -117,7 +131,7 @@ export class TaskService {
 				return {
 					status: 422,
 					body: {
-						message: "tasks already exists with given taskid",
+						message: "tasks already exists with given uid",
 					},
 				};
 			}
@@ -131,25 +145,27 @@ export class TaskService {
 				throw new Error("invalid-inputs");
 			}
 
-			if (!request.taskid) {
-				throw new Error("no-taskid-found");
+			if (!request.patientId) {
+				throw new Error("no-patientId-found");
 			}
 
-			const TasksRef = db.collection(`${this.collectionName}`).doc(request.taskid);
-
-			// checking whether Tasks exists or not
-			const TasksRes = await this._checkUserExists(request.taskid);
-			await TasksRef.update({
-				...request,
+			if (!request.taskid) {
+				throw new Error("no-taskId-found");
+			}
+			const taskRequest = JSON.parse(JSON.stringify(request))
+			const tasksRef = db.collection(`${this.collectionName}/${request.patientId}/CAREPLAN/${request.taskid}/GOALS`).doc(request.taskid);
+			
+			await tasksRef.update({
+				...taskRequest,
 				updatedAt: new Date().toISOString(),
 			});
 			return {
 				status: 200,
 				body: {
-					...TasksRes,
-					...request,
+					...taskRequest,
 				},
 			};
+	
 		} catch (error: any) {
 			console.error(error);
 			if (error.toString().match("invalid-inputs")) {
@@ -165,19 +181,23 @@ export class TaskService {
 				return {
 					status: 422,
 					body: {
-						message: "No taskid found in request",
+						message: "No taskId found in request",
 					},
 				};
 			}
 
-			throw error;
-		}
+			return {
+				status: 422,
+				body: {
+					message: "no task found with given info",
+				},
+			};		}
 	}
 
-	async delete(taskid: string): Promise<t.GetTasksDeleteResponse> {
+	async delete(patientId:string,taskid: string): Promise<t.GetTasksDeleteResponse> {
 		try {
 			await this._checkUserExists(taskid);
-			const TasksRef = db.collection(`${this.collectionName}`).doc(taskid);
+			const TasksRef = (await db.collectionGroup(`TASKS`).where("goalId","==",taskid).where("patientId","==",patientId).get()).docs[0].ref
 			await TasksRef.update({
 				isExist: false,
 				deletedAt: new Date().toISOString(),
@@ -202,11 +222,11 @@ export class TaskService {
 		}
 	}
 
-	private async _checkUserExists(taskid: string) {
-		const response = await this.get(taskid);
-		if (response.status === 404) {
-			throw new Error("no-Tasks-found");
+	private async _checkUserExists(patientId: string) {
+		const response = await db.collection("PATIENTS").doc(patientId).get();
+		if (!response) {
+			throw new Error("no-patient-found");
 		}
-		return response.body;
+		return response.data();
 	}
 }

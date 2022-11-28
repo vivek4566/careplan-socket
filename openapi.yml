@@ -3,7 +3,7 @@ info:
   title: careplan service
   version: '1.0'
 servers:
-  - url: http://localhost:8000
+  - url: http://localhost:8001
 
 paths:
   /Plans/getAll:
@@ -11,6 +11,7 @@ paths:
       tags:
         - Plans
       parameters:
+        - $ref: "#/components/parameters/patientIdParam"
         - $ref: "#/components/parameters/limitParam"
         - $ref: "#/components/parameters/directionParam"
         - $ref: "#/components/parameters/sortByFieldParam"
@@ -93,6 +94,7 @@ paths:
       tags:
         - Plans
       parameters:
+        - $ref: "#/components/parameters/patientIdParam"
         - $ref: "#/components/parameters/idParam"
       responses:
         "200":
@@ -108,6 +110,7 @@ paths:
       tags:
         - goals
       parameters:
+        - $ref: "#/components/parameters/patientIdParam"
         - $ref: "#/components/parameters/limitParam"
         - $ref: "#/components/parameters/directionParam"
         - $ref: "#/components/parameters/sortByFieldParam"
@@ -186,11 +189,13 @@ paths:
         "422":
           $ref: "#/components/responses/UnAcceptableInputs"
   /goals/delete:
-    get:
+    delete:
       tags:
         - goals
       parameters:
+        - $ref: "#/components/parameters/patientIdParam"
         - $ref: "#/components/parameters/idParam"
+
       responses:
         "200":
           $ref: "#/components/responses/Success"
@@ -205,6 +210,7 @@ paths:
       tags:
         - tasks
       parameters:
+        - $ref: "#/components/parameters/patientIdParam"
         - $ref: "#/components/parameters/limitParam"
         - $ref: "#/components/parameters/directionParam"
         - $ref: "#/components/parameters/sortByFieldParam"
@@ -287,6 +293,7 @@ paths:
       tags:
         - tasks
       parameters:
+        - $ref: "#/components/parameters/patientIdParam"
         - $ref: "#/components/parameters/idParam"
       responses:
         "200":
@@ -304,6 +311,12 @@ components:
       type: http
       scheme: bearer
   parameters:
+    patientIdParam:
+      name: patientId
+      in: query
+      required: true
+      schema:
+        type: string
     idParam:
       name: Id
       in: query
@@ -495,6 +508,8 @@ components:
             typeTask:
               type: string
             valueTask:
+              type: string
+            patientId:
               type: string
             # required:
             #   - assigneeTask

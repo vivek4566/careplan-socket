@@ -17,9 +17,9 @@ import { Api } from '../../models'
 
 export interface TasksApi {
 	postTasksCreate: (request: Api.TasksDto | undefined) => Promise<PostTasksCreateResponse>
-	getTasksDelete: (id: string) => Promise<GetTasksDeleteResponse>
+	getTasksDelete: (patientId: string, id: string) => Promise<GetTasksDeleteResponse>
 	getTasksGet: (id: string) => Promise<GetTasksGetResponse>
-	getTasksGetAll: (limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined) => Promise<GetTasksGetAllResponse>
+	getTasksGetAll: (patientId: string, limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined) => Promise<GetTasksGetAllResponse>
 	putTasksUpdate: (request: Api.TasksDto | undefined) => Promise<PutTasksUpdateResponse>
 }
 

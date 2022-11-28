@@ -9,10 +9,10 @@ POST /goals/create
 ```
 
 
-### getGoalsDelete
+### deleteGoalsDelete
 
 ```http
-GET /goals/delete
+DELETE /goals/delete
 ```
 
 
@@ -47,7 +47,7 @@ async function postGoalsCreate(request: Api.GoalsDto | undefined): Promise<t.Pos
 	throw 'Unimplemented'
 }
 
-async function getGoalsDelete(id: string): Promise<t.GetGoalsDeleteResponse> {
+async function deleteGoalsDelete(patientId: string, id: string): Promise<t.DeleteGoalsDeleteResponse> {
 	throw 'Unimplemented'
 }
 
@@ -55,7 +55,7 @@ async function getGoalsGet(id: string): Promise<t.GetGoalsGetResponse> {
 	throw 'Unimplemented'
 }
 
-async function getGoalsGetAll(limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined): Promise<t.GetGoalsGetAllResponse> {
+async function getGoalsGetAll(patientId: string, limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined): Promise<t.GetGoalsGetAllResponse> {
 	throw 'Unimplemented'
 }
 
@@ -66,7 +66,7 @@ async function putGoalsUpdate(request: Api.GoalsDto | undefined): Promise<t.PutG
 
 const api: t.GoalsApi = {
 	postGoalsCreate,
-	getGoalsDelete,
+	deleteGoalsDelete,
 	getGoalsGet,
 	getGoalsGetAll,
 	putGoalsUpdate,

@@ -17,9 +17,9 @@ import { Api } from '../../models'
 
 export interface PlansApi {
 	postPlansCreate: (request: Api.PlansDto | undefined) => Promise<PostPlansCreateResponse>
-	getPlansDelete: (id: string) => Promise<GetPlansDeleteResponse>
+	getPlansDelete: (patientId: string, id: string) => Promise<GetPlansDeleteResponse>
 	getPlansGet: (id: string) => Promise<GetPlansGetResponse>
-	getPlansGetAll: (limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined) => Promise<GetPlansGetAllResponse>
+	getPlansGetAll: (patientId: string, limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined) => Promise<GetPlansGetAllResponse>
 	putPlansUpdate: (request: Api.PlansDto | undefined) => Promise<PutPlansUpdateResponse>
 }
 

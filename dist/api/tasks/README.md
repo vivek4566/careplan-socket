@@ -47,7 +47,7 @@ async function postTasksCreate(request: Api.TasksDto | undefined): Promise<t.Pos
 	throw 'Unimplemented'
 }
 
-async function getTasksDelete(id: string): Promise<t.GetTasksDeleteResponse> {
+async function getTasksDelete(patientId: string, id: string): Promise<t.GetTasksDeleteResponse> {
 	throw 'Unimplemented'
 }
 
@@ -55,7 +55,7 @@ async function getTasksGet(id: string): Promise<t.GetTasksGetResponse> {
 	throw 'Unimplemented'
 }
 
-async function getTasksGetAll(limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined): Promise<t.GetTasksGetAllResponse> {
+async function getTasksGetAll(patientId: string, limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined): Promise<t.GetTasksGetAllResponse> {
 	throw 'Unimplemented'
 }
 

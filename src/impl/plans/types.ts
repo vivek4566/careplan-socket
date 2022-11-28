@@ -2,12 +2,13 @@ import { Api } from "../../../dist/models";
 import * as t from "../../../dist/api/plans/types";
 import * as v from "../../../dist/validation";
 import { db } from "../../admin/types";
+import plans from "../../../dist/api/plans";
 
 export class PlanService {
 	private readonly collectionName: string;
 
 	constructor() {
-		this.collectionName = "NEW-careplans";
+		this.collectionName = "PATIENTS";
 		this.getAll = this.getAll.bind(this);
 		this.get = this.get.bind(this);
 		this.create = this.create.bind(this);
@@ -19,12 +20,13 @@ export class PlanService {
 	 ! Todo: Implement pagination for this service
 	*/
 	async getAll(
+		patientId: string,
 		limit: number | null | undefined,
 		direction: Api.DirectionParamEnum | undefined,
 		sortByField: string | null | undefined
 	): Promise<t.GetPlansGetAllResponse> {
 		try {
-			const plansQuerySnap = await db.collection(`${this.collectionName}`).get();
+			const plansQuerySnap = await db.collectionGroup(`PLANS`).where("patientId","==",patientId).get();
 			const plans: Api.PlansDto[] = plansQuerySnap.docs
 				.map((doc: { data: () => any; }) => doc.data())
 				.map((json: any) => v.modelApiPlansDtoFromJson("plans", json));
@@ -41,13 +43,13 @@ export class PlanService {
 		}
 	}
 
-	async get(Id: string): Promise<t.GetPlansGetResponse> {
+	async get(id: string): Promise<t.GetPlansGetResponse> {
 		try {
-			const plansDocSnap = await db.doc(`${this.collectionName}/${Id}`).get();
+			const plansDocSnap =   (await db.collectionGroup(`PLANS`).where("planId","==",id).get()).docs[0];
 			if (!plansDocSnap.exists) {
-				throw new Error("no-plans-found");
+				throw new Error("no-tasks-found");
 			}
-			const plans = v.modelApiPlansDtoFromJson("goals", plansDocSnap.data());
+			const plans = v.modelApiTasksDtoFromJson("tasks", plansDocSnap.data());
 			return {
 				status: 200,
 				body: plans,
@@ -62,7 +64,11 @@ export class PlanService {
 					},
 				};
 			}
-			throw error;
+			// throw error;
+			return {
+				status: 404,
+				body: {message:`something went wrong`}
+			}
 		}
 	}
 	async create(request: Api.PlansDto | undefined): Promise<t.PostPlansCreateResponse> {
@@ -71,28 +77,32 @@ export class PlanService {
 				throw new Error("invalid-inputs");
 			}
 
-			if (!request.planId) {
-				throw new Error("no-planId-found");
+			if (!request.patientId) {
+				throw new Error("no-patientId-found");
 			}
 
-			const goalsRef = db.collection(`${this.collectionName}`).doc(request.planId);
+			const plansRef = db.collection(`${this.collectionName}/${request.patientId}/CAREPLAN/${request.planId}/PLANS`).doc();
+			request.planId = plansRef.id
+			const plansRequest = v.modelApiPlansDtoFromJson("plans", request);
 			try {
-				await this._checkUserExists(request.planId);
+				const patient = await this._checkUserExists(request.patientId);
+				// console.log("ppppp",patient)
+				await plansRef.set({
+					...plansRequest,
+					isExist: true,
+					createdAt: new Date().toISOString(),
+				});
+				return {
+					status: 201,
+					body: request,
+				};
 			} catch (error: any) {
-				if (error.toString().match("no-plans-found")) {
-					await goalsRef.set({
-						...request,
-						isExist: true,
-						id: goalsRef.id,
-						createdAt: new Date().toISOString(),
-					});
-					return {
-						status: 201,
-						body: request,
-					};
+				if (error.toString().match("no-patient-found")) {
+					throw new Error("no-patient-found");
 				}
+				throw error;
+
 			}
-			throw new Error("plans-already-exists");
 		} catch (error: any) {
 			console.error(error);
 			if (error.toString().match("invalid-inputs")) {
@@ -108,7 +118,7 @@ export class PlanService {
 				return {
 					status: 422,
 					body: {
-						message: "No plans found in request",
+						message: "No uid found in request",
 					},
 				};
 			}
@@ -130,26 +140,32 @@ export class PlanService {
 			if (!request) {
 				throw new Error("invalid-inputs");
 			}
+			if (!request.patientId) {
+				throw new Error("no-patientId-found");
+			}
+
 
 			if (!request.planId) {
 				throw new Error("no-uId-found");
 			}
+			
 
-			const plansRef = db.collection(`${this.collectionName}`).doc(request.planId);
-
-			// checking whether patients exists or not
-			const plansRes = await this._checkUserExists(request.planId);
+			const plansRequest = JSON.parse(JSON.stringify(request))
+			const plansRef = db.collection(`${this.collectionName}/${request.patientId}/CAREPLAN/${request.planId}/PLANS`).doc(request.planId);
 			await plansRef.update({
-				...request,
+				...plansRequest,
 				updatedAt: new Date().toISOString(),
 			});
+			
 			return {
 				status: 200,
 				body: {
-					...plansRes,
-					...request,
+					...plansRef,
+					...plansRequest,
 				},
+				
 			};
+			
 		} catch (error: any) {
 			console.error(error);
 			if (error.toString().match("invalid-inputs")) {
@@ -169,15 +185,20 @@ export class PlanService {
 					},
 				};
 			}
-
-			throw error;
+			return {
+				status: 422,
+				body: {
+					message: "no plans found with given info",
+				},
+				
+			};
 		}
 	}
 
-	async delete(planId: string): Promise<t.GetPlansDeleteResponse> {
+	async delete(patientId:string,planId: string): Promise<t.GetPlansDeleteResponse> {
 		try {
 			await this._checkUserExists(planId);
-			const plansRef = db.collection(`${this.collectionName}`).doc(planId);
+			const plansRef = (await db.collectionGroup(`GOALS`).where("goalId","==",planId).where("patientId","==",patientId).get()).docs[0].ref
 			await plansRef.update({
 				isExist: false,
 				deletedAt: new Date().toISOString(),
@@ -202,11 +223,11 @@ export class PlanService {
 		}
 	}
 
-	private async _checkUserExists(planId: string) {
-		const response = await this.get(planId);
-		if (response.status === 404) {
-			throw new Error("no-plans-found");
+	private async _checkUserExists(patientId: string) {
+		const response = await db.collection("PATIENTS").doc(patientId).get();
+		if (!response) {
+			throw new Error("no-patient-found");
 		}
-		return response.body;
+		return response.data();
 	}
 }

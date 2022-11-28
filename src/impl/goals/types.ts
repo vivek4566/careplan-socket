@@ -7,7 +7,7 @@ export class GoalService {
 	private readonly collectionName: string;
 
 	constructor() {
-		this.collectionName = "NEW-careplans";
+		this.collectionName = "PATIENTS";
 		this.getAll = this.getAll.bind(this);
 		this.get = this.get.bind(this);
 		this.create = this.create.bind(this);
@@ -19,12 +19,13 @@ export class GoalService {
 	 ! Todo: Implement pagination for this service
 	*/
 	async getAll(
+		patientId: string,
 		limit: number | null | undefined,
 		direction: Api.DirectionParamEnum | undefined,
 		sortByField: string | null | undefined
 	): Promise<t.GetGoalsGetAllResponse> {
 		try {
-			const goalsQuerySnap = await db.collection(`${this.collectionName}`).get();
+			const goalsQuerySnap = await db.collectionGroup(`GOALS`).where("patientId","==",patientId).get();
 			const goals: Api.GoalsDto[] = goalsQuerySnap.docs
 				.map((doc: { data: () => any ; }) => doc.data())
 				.map((json: any) => v.modelApiGoalsDtoFromJson("goals", json));
@@ -37,15 +38,19 @@ export class GoalService {
 			};
 		} catch (error) {
 			console.error(error);
-			throw error;
+			//throw error;
+			return {
+				status: 404,
+				body: {message:`something went wrong`}
+			}
 		}
 	}
 
 	async get(id: string): Promise<t.GetGoalsGetResponse> {
 		try {
-			const goalsDocSnap = await db.doc(`${this.collectionName}/${id}`).get();
+			const goalsDocSnap =   (await db.collectionGroup(`GOALS`).where("goalId","==",id).get()).docs[0];
 			if (!goalsDocSnap.exists) {
-				throw new Error("no-goals-found");
+				throw new Error("no-goal-found");
 			}
 			const goals = v.modelApiGoalsDtoFromJson("goals", goalsDocSnap.data());
 			return {
@@ -54,15 +59,19 @@ export class GoalService {
 			};
 		} catch (error: any) {
 			console.error(error);
-			if (error.toString().match("no-goals-found")) {
+			if (error.toString().match("no-goal-found")) {
 				return {
 					status: 404,
 					body: {
-						message: "No goals found with given id",
+						message: "No goal found with given id",
 					},
 				};
 			}
-			throw error;
+			// throw error;
+			return {
+				status: 404,
+				body: {message:`something went wrong`}
+			}
 		}
 	}
 
@@ -72,28 +81,32 @@ export class GoalService {
 				throw new Error("invalid-inputs");
 			}
 
-			if (!request.goalId) {
+			if (!request.patientId) {
 				throw new Error("no-uId-found");
 			}
-
-			const goalsRef = db.collection(`${this.collectionName}`).doc(request.goalId);
+			
+			const goalsRef = db.collection(`${this.collectionName}/${request.patientId}/CAREPLAN/${request.goalId}/GOALS`).doc();
+			request.goalId = goalsRef.id
+			const goalsRequest = v.modelApiGoalsDtoFromJson("goals", request);
 			try {
-				await this._checkUserExists(request.goalId);
+				const patient = await this._checkUserExists(request.patientId);
+				// console.log("pppp",patient)
+				await goalsRef.set({
+					...goalsRequest,
+					isExist: true,
+					createdAt: new Date().toISOString(),
+				});
+				return {
+					status: 201,
+					body: request,
+				};
 			} catch (error: any) {
-				if (error.toString().match("no-goals-found")) {
-					await goalsRef.set({
-						...request,
-						isExist: true,
-						id: goalsRef.id,
-						createdAt: new Date().toISOString(),
-					});
-					return {
-						status: 201,
-						body: request,
-					};
+				if (error.toString().match("no-patient-found")) {
+					throw new Error("no-patient-found");
 				}
+				throw error;
+
 			}
-			throw new Error("goals-already-exists");
 		} catch (error: any) {
 			console.error(error);
 			if (error.toString().match("invalid-inputs")) {
@@ -131,26 +144,32 @@ export class GoalService {
 			if (!request) {
 				throw new Error("invalid-inputs");
 			}
-
-			if (!request.goalId) {
-				throw new Error("no-goalId-found");
+			if (!request.patientId) {
+				throw new Error("no-patientId-found");
 			}
 
-			const goalsRef = db.collection(`${this.collectionName}`).doc(request.goalId);
 
-			// checking whether patients exists or not
-			const goalsRes = await this._checkUserExists(request.goalId);
+			if (!request.goalId) {
+				throw new Error("no-uId-found");
+			}
+			
+
+			const goalsRequest = JSON.parse(JSON.stringify(request))
+			const goalsRef = db.collection(`${this.collectionName}/${request.patientId}/CAREPLAN/${request.goalId}/GOALS`).doc(request.goalId);
 			await goalsRef.update({
-				...request,
+				...goalsRequest,
 				updatedAt: new Date().toISOString(),
 			});
+			
 			return {
 				status: 200,
 				body: {
-					...goalsRes,
-					...request,
+					...goalsRef,
+					...goalsRequest,
 				},
+				
 			};
+			
 		} catch (error: any) {
 			console.error(error);
 			if (error.toString().match("invalid-inputs")) {
@@ -166,19 +185,24 @@ export class GoalService {
 				return {
 					status: 422,
 					body: {
-						message: "No goalId found in request",
+						message: "No uid found in request",
 					},
 				};
 			}
-
-			throw error;
+			return {
+				status: 422,
+				body: {
+					message: "no goals found with given info",
+				},
+				
+			};
 		}
 	}
 
-	async delete(goalId: string): Promise<t.GetGoalsDeleteResponse> {
+	async delete(patientId:string,goalId: string): Promise<t.DeleteGoalsDeleteResponse> {
 		try {
 			await this._checkUserExists(goalId);
-			const goalsRef = db.collection(`${this.collectionName}`).doc(goalId);
+			const goalsRef = (await db.collectionGroup(`GOALS`).where("goalId","==",goalId).where("patientId","==",patientId).get()).docs[0].ref
 			await goalsRef.update({
 				isExist: false,
 				deletedAt: new Date().toISOString(),
@@ -203,11 +227,11 @@ export class GoalService {
 		}
 	}
 
-	private async _checkUserExists(goalId: string) {
-		const response = await this.get(goalId);
-		if (response.status === 404) {
-			throw new Error("no-goals-found");
+	private async _checkUserExists(patientId: string) {
+		const response = await db.collection("PATIENTS").doc(patientId).get();
+		if (!response) {
+			throw new Error("no-patient-found");
 		}
-		return response.body;
+		return response.data();
 	}
 }

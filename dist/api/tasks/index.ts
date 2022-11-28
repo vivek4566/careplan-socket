@@ -116,7 +116,7 @@ export default function(app: Express, impl: t.TasksApi) {
 		'/tasks/delete',
 		function (req, res) {
 			try {
-				impl.getTasksDelete(v.parseString('query.Id', req.query['Id'])).then(function (response) {
+				impl.getTasksDelete(v.parseString('query.patientId', req.query['patientId']), v.parseString('query.Id', req.query['Id'])).then(function (response) {
 					if (response.status === 200) {
 						let body: any
 						try {
@@ -280,7 +280,7 @@ export default function(app: Express, impl: t.TasksApi) {
 		'/tasks/getAll',
 		function (req, res) {
 			try {
-				impl.getTasksGetAll(v.allowUndefined(v.parseInteger)('query.Limit', req.query['Limit']), v.allowUndefined(v.enumApiDirectionParamEnumFromJson)('query.Direction', req.query['Direction']), v.allowUndefined(v.parseString)('query.SortByField', req.query['SortByField'])).then(function (response) {
+				impl.getTasksGetAll(v.parseString('query.patientId', req.query['patientId']), v.allowUndefined(v.parseInteger)('query.Limit', req.query['Limit']), v.allowUndefined(v.enumApiDirectionParamEnumFromJson)('query.Direction', req.query['Direction']), v.allowUndefined(v.parseString)('query.SortByField', req.query['SortByField'])).then(function (response) {
 					if (response.status === 200) {
 						let body: any
 						try {

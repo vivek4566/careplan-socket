@@ -112,17 +112,17 @@ export default function(app: Express, impl: t.GoalsApi) {
 		}
 	)
 
-	app.get(
+	app.delete(
 		'/goals/delete',
 		function (req, res) {
 			try {
-				impl.getGoalsDelete(v.parseString('query.Id', req.query['Id'])).then(function (response) {
+				impl.deleteGoalsDelete(v.parseString('query.patientId', req.query['patientId']), v.parseString('query.Id', req.query['Id'])).then(function (response) {
 					if (response.status === 200) {
 						let body: any
 						try {
 							body = v.modelApiMessageDtoToJson('response', response.body)
 						} catch (error) {
-							console.error('Invalid response body in goals.getGoalsDelete', error)
+							console.error('Invalid response body in goals.deleteGoalsDelete', error)
 							res.status(500)
 							res.send()
 							return
@@ -137,7 +137,7 @@ export default function(app: Express, impl: t.GoalsApi) {
 						try {
 							body = v.modelApiMessageDtoToJson('response', response.body)
 						} catch (error) {
-							console.error('Invalid response body in goals.getGoalsDelete', error)
+							console.error('Invalid response body in goals.deleteGoalsDelete', error)
 							res.status(500)
 							res.send()
 							return
@@ -152,7 +152,7 @@ export default function(app: Express, impl: t.GoalsApi) {
 						try {
 							body = v.modelApiMessageDtoToJson('response', response.body)
 						} catch (error) {
-							console.error('Invalid response body in goals.getGoalsDelete', error)
+							console.error('Invalid response body in goals.deleteGoalsDelete', error)
 							res.status(500)
 							res.send()
 							return
@@ -167,7 +167,7 @@ export default function(app: Express, impl: t.GoalsApi) {
 						try {
 							body = v.modelApiMessageDtoToJson('response', response.body)
 						} catch (error) {
-							console.error('Invalid response body in goals.getGoalsDelete', error)
+							console.error('Invalid response body in goals.deleteGoalsDelete', error)
 							res.status(500)
 							res.send()
 							return
@@ -178,11 +178,11 @@ export default function(app: Express, impl: t.GoalsApi) {
 						return
 					}
 
-					console.log('Unsupported response in goals.getGoalsDelete', response)
+					console.log('Unsupported response in goals.deleteGoalsDelete', response)
 					res.status(500)
 					res.send()
 				}).catch(function (error) {
-					console.error('Unexpected error in goals.getGoalsDelete', error.stack || error)
+					console.error('Unexpected error in goals.deleteGoalsDelete', error.stack || error)
 					res.status(500)
 					res.send()
 				})
@@ -280,7 +280,7 @@ export default function(app: Express, impl: t.GoalsApi) {
 		'/goals/getAll',
 		function (req, res) {
 			try {
-				impl.getGoalsGetAll(v.allowUndefined(v.parseInteger)('query.Limit', req.query['Limit']), v.allowUndefined(v.enumApiDirectionParamEnumFromJson)('query.Direction', req.query['Direction']), v.allowUndefined(v.parseString)('query.SortByField', req.query['SortByField'])).then(function (response) {
+				impl.getGoalsGetAll(v.parseString('query.patientId', req.query['patientId']), v.allowUndefined(v.parseInteger)('query.Limit', req.query['Limit']), v.allowUndefined(v.enumApiDirectionParamEnumFromJson)('query.Direction', req.query['Direction']), v.allowUndefined(v.parseString)('query.SortByField', req.query['SortByField'])).then(function (response) {
 					if (response.status === 200) {
 						let body: any
 						try {

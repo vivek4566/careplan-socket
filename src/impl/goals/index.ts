@@ -5,7 +5,7 @@ const service = new GoalService();
 
 export const GoalServiceImpl: t.GoalsApi = {
 	postGoalsCreate: service.create,
-	getGoalsDelete: service.delete,
+	deleteGoalsDelete: service.delete,
 	getGoalsGet: service.get,
 	getGoalsGetAll: service.getAll,
 	putGoalsUpdate: service.update,

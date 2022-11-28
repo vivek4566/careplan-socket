@@ -17,9 +17,9 @@ import { Api } from '../../models'
 
 export interface GoalsApi {
 	postGoalsCreate: (request: Api.GoalsDto | undefined) => Promise<PostGoalsCreateResponse>
-	getGoalsDelete: (id: string) => Promise<GetGoalsDeleteResponse>
+	deleteGoalsDelete: (patientId: string, id: string) => Promise<DeleteGoalsDeleteResponse>
 	getGoalsGet: (id: string) => Promise<GetGoalsGetResponse>
-	getGoalsGetAll: (limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined) => Promise<GetGoalsGetAllResponse>
+	getGoalsGetAll: (patientId: string, limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined) => Promise<GetGoalsGetAllResponse>
 	putGoalsUpdate: (request: Api.GoalsDto | undefined) => Promise<PutGoalsUpdateResponse>
 }
 
@@ -49,27 +49,27 @@ export interface PostGoalsCreate422Response {
 	headers?: never
 }
 
-export type GetGoalsDeleteResponse = GetGoalsDelete200Response | GetGoalsDelete401Response | GetGoalsDelete404Response | GetGoalsDelete422Response
+export type DeleteGoalsDeleteResponse = DeleteGoalsDelete200Response | DeleteGoalsDelete401Response | DeleteGoalsDelete404Response | DeleteGoalsDelete422Response
 
-export interface GetGoalsDelete200Response {
+export interface DeleteGoalsDelete200Response {
 	status: 200
 	body: Api.MessageDto
 	headers?: never
 }
 
-export interface GetGoalsDelete401Response {
+export interface DeleteGoalsDelete401Response {
 	status: 401
 	body: Api.MessageDto
 	headers?: never
 }
 
-export interface GetGoalsDelete404Response {
+export interface DeleteGoalsDelete404Response {
 	status: 404
 	body: Api.MessageDto
 	headers?: never
 }
 
-export interface GetGoalsDelete422Response {
+export interface DeleteGoalsDelete422Response {
 	status: 422
 	body: Api.MessageDto
 	headers?: never

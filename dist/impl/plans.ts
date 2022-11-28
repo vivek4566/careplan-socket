@@ -5,7 +5,7 @@ async function postPlansCreate(request: Api.PlansDto | undefined): Promise<t.Pos
 	throw 'Unimplemented'
 }
 
-async function getPlansDelete(id: string): Promise<t.GetPlansDeleteResponse> {
+async function getPlansDelete(patientId: string, id: string): Promise<t.GetPlansDeleteResponse> {
 	throw 'Unimplemented'
 }
 
@@ -13,7 +13,7 @@ async function getPlansGet(id: string): Promise<t.GetPlansGetResponse> {
 	throw 'Unimplemented'
 }
 
-async function getPlansGetAll(limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined): Promise<t.GetPlansGetAllResponse> {
+async function getPlansGetAll(patientId: string, limit: number | null | undefined, direction: Api.DirectionParamEnum | undefined, sortByField: string | null | undefined): Promise<t.GetPlansGetAllResponse> {
 	throw 'Unimplemented'
 }
 

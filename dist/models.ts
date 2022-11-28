@@ -84,6 +84,7 @@ export namespace Api {
 		taskid?: string;
 		typeTask?: string;
 		valueTask?: string;
+		patientId?: string;
 	}
 
 	export interface TasksPagedResultDto {

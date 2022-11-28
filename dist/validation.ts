@@ -682,7 +682,7 @@ export function modelApiPlansPagedResultDtoToJson(name: string, value: Api.Plans
 	return result
 }
 
-const ApiTasksDtoKeys: string[] = ['assigneeTask', 'createdAt', 'descriptionTask', 'goalId', 'isExist', 'planId', 'priorityTask', 'statusTask', 'subjectTask', 'targetDateTask', 'taskid', 'typeTask', 'valueTask']
+const ApiTasksDtoKeys: string[] = ['assigneeTask', 'createdAt', 'descriptionTask', 'goalId', 'isExist', 'planId', 'priorityTask', 'statusTask', 'subjectTask', 'targetDateTask', 'taskid', 'typeTask', 'valueTask', 'patientId']
 
 function modelApiTasksDtoFromJsonContent(name: string, value: any, knownKeys: Record<string, boolean> = {}): Api.TasksDto {
 	if (typeof value !== 'object' || value === undefined || value === null) {
@@ -705,6 +705,7 @@ function modelApiTasksDtoFromJsonContent(name: string, value: any, knownKeys: Re
 		'taskid': allowUndefined(stringFromJson)(`${name}.taskid`, value['taskid']),
 		'typeTask': allowUndefined(stringFromJson)(`${name}.typeTask`, value['typeTask']),
 		'valueTask': allowUndefined(stringFromJson)(`${name}.valueTask`, value['valueTask']),
+		'patientId': allowUndefined(stringFromJson)(`${name}.patientId`, value['patientId']),
 	}
 
 	return result
@@ -731,6 +732,7 @@ function modelApiTasksDtoToJsonContent(name: string, value: Api.TasksDto, knownK
 		'taskid': allowUndefined(stringToJson)(`${name}.taskid`, value['taskid']),
 		'typeTask': allowUndefined(stringToJson)(`${name}.typeTask`, value['typeTask']),
 		'valueTask': allowUndefined(stringToJson)(`${name}.valueTask`, value['valueTask']),
+		'patientId': allowUndefined(stringToJson)(`${name}.patientId`, value['patientId']),
 	}
 
 	return result

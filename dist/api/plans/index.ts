@@ -116,7 +116,7 @@ export default function(app: Express, impl: t.PlansApi) {
 		'/Plans/delete',
 		function (req, res) {
 			try {
-				impl.getPlansDelete(v.parseString('query.Id', req.query['Id'])).then(function (response) {
+				impl.getPlansDelete(v.parseString('query.patientId', req.query['patientId']), v.parseString('query.Id', req.query['Id'])).then(function (response) {
 					if (response.status === 200) {
 						let body: any
 						try {
@@ -280,7 +280,7 @@ export default function(app: Express, impl: t.PlansApi) {
 		'/Plans/getAll',
 		function (req, res) {
 			try {
-				impl.getPlansGetAll(v.allowUndefined(v.parseInteger)('query.Limit', req.query['Limit']), v.allowUndefined(v.enumApiDirectionParamEnumFromJson)('query.Direction', req.query['Direction']), v.allowUndefined(v.parseString)('query.SortByField', req.query['SortByField'])).then(function (response) {
+				impl.getPlansGetAll(v.parseString('query.patientId', req.query['patientId']), v.allowUndefined(v.parseInteger)('query.Limit', req.query['Limit']), v.allowUndefined(v.enumApiDirectionParamEnumFromJson)('query.Direction', req.query['Direction']), v.allowUndefined(v.parseString)('query.SortByField', req.query['SortByField'])).then(function (response) {
 					if (response.status === 200) {
 						let body: any
 						try {
